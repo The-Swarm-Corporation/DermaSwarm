@@ -26,6 +26,51 @@ pip install -U dermaswarm
 - **Comprehensive Logging**: Track the entire diagnostic process with extensive logging to ensure transparency and traceability of agent actions.
 - **API-Ready**: Easy to integrate with existing dermatology workflows and applications.
 
+
+## Architecture
+
+```mermaid
+graph TD
+    A[Images and Text Describing Condition] --> B[Diagnosis Agent]
+    B --> C[Outputs Potential Diagnoses]
+    
+    C --> R1[Round Robin Swarm of Specialists]
+    
+    R1 --> M1[Medical Dermatology Agent]
+    R1 --> S1[Surgical Dermatology Agent]
+    R1 --> C1[Cosmetic Dermatology Agent]
+    R1 --> P1[Pediatric Dermatology Agent]
+    R1 --> D1[Dermatopathology Agent]
+    R1 --> I1[Immunodermatology Agent]
+    R1 --> M2[Mohs Surgery Agent]
+    R1 --> T1[Trichology Agent]
+    R1 --> TD1[Teledermatology Agent]
+
+    M1 -->|Validates and Provides Thoughts| R2
+    S1 -->|Validates and Provides Thoughts| R2
+    C1 -->|Validates and Provides Thoughts| R2
+    P1 -->|Validates and Provides Thoughts| R2
+    D1 -->|Validates and Provides Thoughts| R2
+    I1 -->|Validates and Provides Thoughts| R2
+    M2 -->|Validates and Provides Thoughts| R2
+    T1 -->|Validates and Provides Thoughts| R2
+    TD1 -->|Validates and Provides Thoughts| R2
+    
+    R2[Consensus Agent: Most Likely Diagnosis] --> MI[Medical Insight Agent]
+    MI -->|Queries PubMed for Articles| D3[Final Diagnosis]
+
+    D3 --> H{Validated by Human?}
+    H -->|Yes| I[Human Validates Diagnosis]
+    H -->|No| J[Auto Confirmed by Swarm]
+
+    D3 --> K[Treatment Plan Agent]
+    K --> L[Proposes Series of Treatments]
+    L --> M[Ranks Treatments: Best Fit, Cheapest, Most Effective, Least Painful]
+    M --> N[Final Treatment Plan]
+
+
+```
+
 ## Usage
 
 Below is an example of how to use **DermaSwarm** in a typical dermatological workflow.
