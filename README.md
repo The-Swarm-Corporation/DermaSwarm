@@ -1,67 +1,120 @@
-[![Multi-Modality](agorabanner.png)](https://discord.com/servers/agora-999382051935506503)
-
-# Python Package Template
+g
+# DermaSwarm: A Production-Grade Multi-Agent Dermatology Swarm
 
 [![Join our Discord](https://img.shields.io/badge/Discord-Join%20our%20server-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/agora-999382051935506503) [![Subscribe on YouTube](https://img.shields.io/badge/YouTube-Subscribe-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@kyegomez3242) [![Connect on LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/kye-g-38759a207/) [![Follow on X.com](https://img.shields.io/badge/X.com-Follow-1DA1F2?style=for-the-badge&logo=x&logoColor=white)](https://x.com/kyegomezb)
 
-A easy, reliable, fluid template for python packages complete with docs, testing suites, readme's, github workflows, linting and much much more
 
+[![PyPI version](https://badge.fury.io/py/dermaswarm.svg)](https://badge.fury.io/py/dermaswarm)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/The-Swarm-Corporation/DermaSwarm/blob/main/LICENSE)
+
+
+**DermaSwarm** is a production-grade multi-agent system designed for dermatologists to collaboratively diagnose and treat skin conditions. Leveraging the power of AI-driven agents, DermaSwarm cross-checks peer-reviewed dermatology research to ensure diagnosis accuracy, generates treatment plans, and outputs results in easy-to-use JSON format. With extensive logging, seamless collaboration between agents, and a focus on clinical reliability, DermaSwarm is built for real-world use by dermatology practitioners.
 
 ## Installation
 
-You can install the package using pip
+You can install **DermaSwarm** via pip:
 
 ```bash
-pip install -e .
+pip install -U dermaswarm
 ```
 
-# Usage
+## Features
+
+- **Multi-Agent Collaboration**: Leverage multiple AI agents specialized in dermatology to analyze symptoms, suggest diagnoses, and validate findings against peer-reviewed literature.
+- **Evidence-Based Diagnoses**: Each diagnosis is cross-referenced with peer-reviewed articles to ensure accuracy and up-to-date knowledge.
+- **Personalized Treatment Plans**: Based on the diagnosis, DermaSwarm generates a personalized treatment plan for the patient.
+- **JSON Output**: Structured outputs in JSON format, including diagnosis, references, and suggested treatments for easy integration into medical records.
+- **Comprehensive Logging**: Track the entire diagnostic process with extensive logging to ensure transparency and traceability of agent actions.
+- **API-Ready**: Easy to integrate with existing dermatology workflows and applications.
+
+## Usage
+
+Below is an example of how to use **DermaSwarm** in a typical dermatological workflow.
+
+### Example
+
+
+### Logging
+
+**DermaSwarm** includes comprehensive logging powered by `loguru` to track agent decisions, references to peer-reviewed articles, and diagnostic conclusions. You can configure the logging settings to fit your clinic’s compliance and documentation needs.
+
 ```python
-print("hello world")
+from dermaswarm import configure_logging
 
+# Configure logging
+configure_logging(level="INFO", log_file="diagnosis_logs.log")
 ```
 
+## API Integration
 
+DermaSwarm can be easily integrated into any clinical software via its REST API interface. Below is an example request using cURL:
 
-### Code Quality 🧹
-
-- `make style` to format the code
-- `make check_code_quality` to check code quality (PEP8 basically)
-- `black .`
-- `ruff . --fix`
-
-### Tests 🧪
-
-[`pytests`](https://docs.pytest.org/en/7.1.x/) is used to run our tests.
-
-### Publish on PyPi 🚀
-
-**Important**: Before publishing, edit `__version__` in [src/__init__](/src/__init__.py) to match the wanted new version.
-
+```bash
+curl -X POST https://api.dermaswarm.com/diagnose \
+-H "Content-Type: application/json" \
+-d '{
+  "symptoms": {
+    "rash": "red, scaly patches",
+    "location": "forearm",
+    "duration": "2 weeks",
+    "itchiness": "severe"
+  },
+  "medical_history": {
+    "allergies": ["pollen"],
+    "current_medications": ["ibuprofen"]
+  }
+}'
 ```
-poetry build
-poetry publish
+
+### API Response
+
+```json
+{
+  "diagnosis": "Psoriasis",
+  "treatment_plan": {
+    "medications": [
+      {
+        "name": "Topical Corticosteroids",
+        "dosage": "Apply twice daily for 2 weeks"
+      }
+    ],
+    "follow_up": "Reassess in 4 weeks for symptom improvement"
+  },
+  "peer_reviewed_articles": [
+    {
+      "title": "Psoriasis and Its Treatment",
+      "journal": "Journal of Dermatology",
+      "url": "https://example.com/psoriasis-article"
+    }
+  ]
+}
 ```
 
-### CI/CD 🤖
+## Configuration
 
-We use [GitHub actions](https://github.com/features/actions) to automatically run tests and check code quality when a new PR is done on `main`.
+DermaSwarm offers flexible configuration options to tailor the system to your practice:
 
-On any pull request, we will check the code quality and tests.
+```python
+from dermaswarm import set_config
 
-When a new release is created, we will try to push the new code to PyPi. We use [`twine`](https://twine.readthedocs.io/en/stable/) to make our life easier. 
+set_config({
+    "peer_review_check": True, 
+    "output_format": "json", 
+    "log_level": "INFO"
+})
+```
 
-The **correct steps** to create a new realease are the following:
-- edit `__version__` in [src/__init__](/src/__init__.py) to match the wanted new version.
-- create a new [`tag`](https://git-scm.com/docs/git-tag) with the release name, e.g. `git tag v0.0.1 && git push origin v0.0.1` or from the GitHub UI.
-- create a new release from GitHub UI
+## Roadmap
 
-The CI will run when you create the new release.
+- **Enhanced Treatment Plans**: Addition of more diverse treatment recommendations, including alternative therapies.
+- **Multi-Language Support**: Expanding the language capabilities to support non-English-speaking regions.
+- **Cloud Integration**: Upcoming support for cloud-based deployments with added security and scalability.
+- **Mobile App Integration**: Seamless mobile interface for real-time diagnostics on-the-go.
 
-# Docs
-We use MK docs. This repo comes with the zeta docs. All the docs configurations are already here along with the readthedocs configs.
+## Contributing
 
+We welcome contributions from the community! Please see our [CONTRIBUTING.md](https://github.com/The-Swarm-Corporation/DermaSwarm/blob/main/CONTRIBUTING.md) for more details.
 
+## License
 
-# License
-MIT
+DermaSwarm is open-source software, licensed under the [MIT License](https://github.com/The-Swarm-Corporation/DermaSwarm/blob/main/LICENSE).
