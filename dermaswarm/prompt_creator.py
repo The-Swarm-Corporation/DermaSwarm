@@ -24,14 +24,18 @@ dermatology_subfields = {
     "Immunodermatology": "Deals with skin disorders related to the immune system, such as autoimmune skin diseases.",
     "Mohs Surgery": "A specialized surgical technique for treating skin cancer, where the surgeon removes thin layers of skin and examines them under a microscope until only cancer-free tissue remains.",
     "Teledermatology": "Involves providing dermatological consultations and care remotely through telecommunication technologies.",
-    "Trichology": "A subfield focusing on hair and scalp disorders, including hair loss and other hair-related issues."
+    "Trichology": "A subfield focusing on hair and scalp disorders, including hair loss and other hair-related issues.",
 }
+
 
 # Function to write the prompt to a markdown file
 def write_prompt_to_file(subfield, prompt):
-    filename = f"{subfield.replace(' ', '_').lower()}_system_prompt.md"
+    filename = (
+        f"{subfield.replace(' ', '_').lower()}_system_prompt.md"
+    )
     with open(filename, "w") as file:
         file.write(prompt)
+
 
 # Initialize the agent
 agent = Agent(
@@ -50,6 +54,7 @@ agent = Agent(
     return_step_meta=False,
 )
 
+
 # Function to create system prompts
 def create_system_prompt(subfield, description):
     prompt = f"""Create specialized, hyper accurate and production ready system prompts for {subfield}, make sure to teach it how to think: {description}. Be very specific and teach the agent how to think, provide instructions, make them extensive"""
@@ -64,6 +69,8 @@ for subfield, description in dermatology_subfields.items():
     # Save the generated prompt to a markdown file
     write_prompt_to_file(subfield, prompt)
 
-    print(f"Created system prompt for {subfield} and saved to markdown file.")
+    print(
+        f"Created system prompt for {subfield} and saved to markdown file."
+    )
 
 print("All system prompts have been generated and saved.")

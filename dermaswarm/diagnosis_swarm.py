@@ -1,55 +1,94 @@
+import os
+
+from dotenv import load_dotenv
+from swarm_models import GPT4VisionAPI
 from swarms import Agent, RoundRobinSwarm
-from swarm_models import OpenAIChat
 
+load_dotenv()
 
-# Initialize the LLM
-llm = OpenAIChat()
+# Get the OpenAI API key from the environment variable
+api_key = os.getenv("OPENAI_API_KEY")
 
-# Define sales agents
-sales_agent1 = Agent(
-    agent_name="Sales Agent 1 - Automation Specialist",
-    system_prompt="You're Sales Agent 1, your purpose is to generate sales for a company by focusing on the benefits of automating accounting processes!",
-    agent_description="Generate sales by focusing on the benefits of automation!",
-    llm=llm,
-    max_loops=1,
-    autosave=True,
-    dashboard=False,
-    verbose=True,
-    streaming_on=True,
-    context_length=1000,
+# # Create an instance of the OpenAIChat class
+# model = OpenAIChat(
+#     openai_api_key=api_key, model_name="gpt-4o-mini", temperature=0.1
+# )
+
+model = GPT4VisionAPI(
+    openai_api_key=os.getenv("OPENAI_API_KEY"),
+    max_tokens=3000,
+    logging_enabled=True,
 )
 
-sales_agent2 = Agent(
-    agent_name="Sales Agent 2 - Cost Saving Specialist",
-    system_prompt="You're Sales Agent 2, your purpose is to generate sales for a company by emphasizing the cost savings of using swarms of agents!",
-    agent_description="Generate sales by emphasizing cost savings!",
-    llm=llm,
+
+dermatology_subfields = [
+    {
+        "subfield": "Medical Dermatology",
+        "description": "Focuses on the diagnosis and treatment of skin diseases like eczema, psoriasis, acne, and infections.",
+    },
+    {
+        "subfield": "Surgical Dermatology",
+        "description": "Involves surgical interventions for skin conditions such as skin cancer, cysts, or benign growths.",
+    },
+    {
+        "subfield": "Cosmetic Dermatology",
+        "description": "Concentrates on aesthetic improvements of the skin, including treatments for wrinkles, pigmentation, and scars, and procedures like Botox, fillers, and laser therapy.",
+    },
+    {
+        "subfield": "Pediatric Dermatology",
+        "description": "Specializes in treating skin conditions in infants, children, and adolescents.",
+    },
+    {
+        "subfield": "Dermatopathology",
+        "description": "Combines dermatology and pathology, focusing on diagnosing skin diseases by examining skin biopsies at a microscopic level.",
+    },
+    {
+        "subfield": "Immunodermatology",
+        "description": "Deals with skin disorders related to the immune system, such as autoimmune skin diseases.",
+    },
+    {
+        "subfield": "Mohs Surgery",
+        "description": "A specialized surgical technique for treating skin cancer, where the surgeon removes thin layers of skin and examines them under a microscope until only cancer-free tissue remains.",
+    },
+    {
+        "subfield": "Teledermatology",
+        "description": "Involves providing dermatological consultations and care remotely through telecommunication technologies.",
+    },
+    {
+        "subfield": "Trichology",
+        "description": "A subfield focusing on hair and scalp disorders, including hair loss and other hair-related issues.",
+    },
+]
+
+agents = []
+for field in dermatology_subfields:
+    print(f"{field['subfield']} – {field['description']}")
+    name = field["subfield"]
+    description = field["description"]
+
+    agent = Agent(
+        agent_name=f"{name}_agent",
+        description=description,
+        llm=model,
+        max_loops=1,
+        # autosave=True,
+        dashboard=False,
+        verbose=True,
+        dynamic_temperature_enabled=True,
+        saved_state_path=f"{name}.json",
+        user_name="swarms_corp",
+        retry_attempts=1,
+        context_length=200000,
+        return_step_meta=False,
+        # output_type="json",
+        output_type=str,
+    )
+
+    agents.append(agent)
+
+
+# Round robin
+diagnosis_swarm = RoundRobinSwarm(
+    agents=agents,
     max_loops=1,
-    autosave=True,
-    dashboard=False,
-    verbose=True,
-    streaming_on=True,
-    context_length=1000,
 )
-
-sales_agent3 = Agent(
-    agent_name="Sales Agent 3 - Efficiency Specialist",
-    system_prompt="You're Sales Agent 3, your purpose is to generate sales for a company by highlighting the efficiency and accuracy of our swarms of agents in accounting processes!",
-    agent_description="Generate sales by highlighting efficiency and accuracy!",
-    llm=llm,
-    max_loops=1,
-    autosave=True,
-    dashboard=False,
-    verbose=True,
-    streaming_on=True,
-    context_length=1000,
-)
-
-# Initialize the swarm with sales agents
-sales_swarm = RoundRobinSwarm(agents=[sales_agent1, sales_agent2, sales_agent3], verbose=True)
-
-# Define a sales task
-task = "Generate a sales email for an accountant firm executive to sell swarms of agents to automate their accounting processes."
-
-# Distribute sales tasks to different agents
-results = sales_swarm.run(task)
