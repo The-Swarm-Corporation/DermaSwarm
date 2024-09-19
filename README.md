@@ -9,6 +9,8 @@
 
 **DermaSwarm** is a production-grade multi-agent system designed for dermatologists to collaboratively diagnose and treat skin conditions. Leveraging the power of AI-driven agents, DermaSwarm cross-checks peer-reviewed dermatology research to ensure diagnosis accuracy, generates treatment plans, and outputs results in easy-to-use JSON format. With extensive logging, seamless collaboration between agents, and a focus on clinical reliability, DermaSwarm is built for real-world use by dermatology practitioners.
 
+**Currently a work in progress**
+
 ## Installation
 
 You can install **DermaSwarm** via pip:
